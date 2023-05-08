@@ -1,0 +1,57 @@
+
+// #include <vector>
+// #include <string>
+// #include <map>
+// #include <cmath>
+// #include <list>
+
+// #include <ros/ros.h>
+// #include <tf/tf.h>
+// #include <tf/transform_listener.h>
+// #include <opencv2/opencv.hpp>
+// #include <opencv2/highgui/highgui.hpp>
+// #include <opencv2/imgproc/imgproc.hpp>
+
+// #include <nav_msgs/OccupancyGrid.h>
+// #include <nav_msgs/Path.h>
+// #include <geometry_msgs/PoseStamped.h>
+// #include <geometry_msgs/Pose.h>
+// #include <geometry_msgs/Twist.h>
+
+// class MetalDetector{
+    
+//     private:
+//         ros::NodeHandle nh_;
+//         ros::Subscriber signal_sub_;
+//         ros::Subscriber twist_cmd_sub_;
+
+//         cv::Mat<float> moy_;
+//         cv::Mat<unsigned int> iter_;
+
+//         float pose_x;
+//         float pose_y;
+//         float pose_z;
+
+//         void MetalDetector::twist_callback(const geometry_msgs::Twist &msg){
+//             frame_id_ = msg->header.frame_id;
+//             tf::StampedTransform transform;
+//             listener_.waitForTransform("map",base_link_,ros::Time::now(),ros::Duration(1.0));
+//             listener_.lookupTransform("map",base_link_, ros::Time(0), transform);
+//             geometry_msgs::Pose curr_pose;
+//             curr_pose.position.x=transform.getOrigin().x() / info_.resolution + og_center_.x;
+//             curr_pose.position.y=transform.getOrigin().y() / info_.resolution + og_center_.y;
+//             curr_pose.position.z=(unsigned int) round(tf::getYaw(transform.getRotation())/M_PI*4)%8 + og_center_.z;
+//         }
+
+//         void MetalDetector::metal_callback(void){       
+            
+//         }
+
+//     public:
+//         MetalDetector::MetalDetector() {
+//             static cv::Mat<float> moy_ = cv::Mat_<float>(og_.rows, og_.cols,0.0);
+//             static cv::Mat<unsigned int> iter_ = cv::Mat_<unsigned int>(og_.rows, og_.cols,0);
+//         }
+// }
+
+// int main(int argc, char * argv[]) {}
