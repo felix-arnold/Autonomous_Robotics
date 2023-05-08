@@ -1,0 +1,22 @@
+<launch>
+
+        <include file="$(find turtlebot_teleop)/launch/includes/velocity_smoother.launch.xml"/>
+
+        <node pkg="collision_detection" name="regulator_cmd" type="regulator_cmd.py" output="screen" />
+
+        <node respawn="true" pkg="joy" type="joy_node" name="joy" >
+        <param name="dev" type="str" value="/dev/input/js0" />
+        </node>
+
+        <node pkg="robot_teleop_joy" type="robot_teleop_joy_cpp" name="robotTeleopJoy" output="screen" >
+                <param name="publishTopicName" type="string" value="teleop_velocity_smoother/raw_cmd_vel" />
+                <param name="stickIndexLinear" type="int" value="1" />
+                <param name="stickIndexAngular" type="int" value="0" />
+                <param name="dpadIndexLinear" type="int" value="5" />
+                <param name="dpadIndexAngular" type="int" value="4" />
+                <param name="inverseAngularMode" type="bool" value="true" />
+                <param name="buttonIndex" type="int" value="1" />
+                <param name="buttonVelocity" type="double" value="0.5" />
+        </node>
+
+</launch>

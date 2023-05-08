@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(robot_teleop_joy)
+project(collision_detection)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -8,8 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  turtlesim
-  joy
 )
 
 ## Declare ROS messages and services
@@ -25,9 +23,9 @@ catkin_package()
 ## Build talker and listener
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(robot_teleop_joy_cpp src/robot_teleop_joy.cpp)
-target_link_libraries(robot_teleop_joy_cpp ${catkin_LIBRARIES})
+##add_executable(collision_detection src/collision_detection.cpp)
+##target_link_libraries(collision_detection ${catkin_LIBRARIES})
 
-catkin_install_python(PROGRAMS scripts/robot_teleop_joy.py
+catkin_install_python(PROGRAMS scripts/regulator_cmd.py
   DESTINATION $(CATKIN_PACKAGE_BIN_DESTINATION)
 )

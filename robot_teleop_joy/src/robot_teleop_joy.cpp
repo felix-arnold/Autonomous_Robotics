@@ -1,40 +1,39 @@
 #include "robot_teleop_joy.hpp"
 
-TeleopRobot::TeleopRobot() {
-    ros::NodeHandle nh;
+TeleopRobot::TeleopRobot() {    
+    nh.param("publishTopicName", publishTopicName, (std::string) "vrep/twistCommand");
+    nh.param("stickIndexLinear", stickIndexLinear, 1);
+    nh.param("stickIndexAngular", stickIndexAngular, 0);
+    nh.param("dpadIndexLinear", dpadIndexLinear, 5);
+    nh.param("dpadIndexAngular", dpadIndexAngular, 4);
+    nh.param("inverseAngularMode", angularMode, false);
+    nh.param("buttonIndex", buttonIndex, 1);
+    nh.param("buttonVelocity", buttonVelocity, 0.5);
 
-    //for turtlesim
-    //robPub = nh.advertise<geometry_msgs::Twist>("turtle1/cmd_vel", 1);
-    //for coppelia robot
-    robPub = nh.advertise<geometry_msgs::Twist>("vrep/twistCommand", 1);
-
+    robPub = nh.advertise<geometry_msgs::Twist>(publishTopicName, 1);
     joySub = nh.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopRobot::joyGetInputs, this);
+
+    ros::Timer timer = nh.createTimer(ros::Duration(0.1), boost::bind(&TeleopRobot::publish, this));
+
     ros::spin();
 }
 
 void TeleopRobot::joyGetInputs(const sensor_msgs::Joy::ConstPtr& joy) {
 
-    //for switch joystick
-    //int crossAxesIndex = 4;
-    //for logitech joystick
-    int crossAxesIndex = 6;
+    linear = (joy->axes[dpadIndexLinear] ? joy->axes[dpadIndexLinear] : joy->axes[stickIndexLinear]) * (joy->buttons[buttonIndex]*(buttonVelocity-1)+1);
+    angular = (joy->axes[dpadIndexAngular] ? (1-2*(int)angularMode)*joy->axes[dpadIndexAngular] : (1-2*(int)angularMode)*joy->axes[stickIndexAngular]) * (joy->buttons[buttonIndex]*(buttonVelocity-1)+1);
 
-    float linear = (joy->axes[crossAxesIndex+1] ? joy->axes[crossAxesIndex+1] : joy->axes[1]) * (joy->buttons[1]*2+1);
-
-    //for turtlesim
-    //float angular = (joy->axes[crossAxesIndex] ? joy->axes[crossAxesIndex] : joy->axes[0]) * (joy->buttons[1]*2+1);
-    //for coppelia robot
-    float angular = (-joy->axes[crossAxesIndex] ? -joy->axes[crossAxesIndex] : -joy->axes[0]) * (joy->buttons[1]*2+1);
-
-    geometry_msgs::Twist twist;
     twist.linear.x = linear;
     twist.angular.z = angular;
-    robPub.publish(twist);
+}
 
-    std::cout << "linear: " << linear << "   angular: " << angular << std::endl;
+void TeleopRobot::publish() {
+    robPub.publish(twist);
+    std::cout << "  Linear value: " << linear << "\n  Angular value: " << angular << "\n----------" << std::endl;
 }
 
 int main(int argc, char **argv) {
+
     ros::init(argc, argv, "robotTeleop");
     TeleopRobot teleopRobot;
 
